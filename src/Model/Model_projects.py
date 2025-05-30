@@ -24,14 +24,14 @@ def get_project_by_technology(technology):
         return rows_to_dict(projects)
     
 
-def add_project (project_name, purpose,  tech_ids, github_link=None, docker_link=None):
+def add_project (project_name, purpose,  tech_ids, image_filename, github_link=None, docker_link=None):
     with get_db_connection() as conn:
         cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
         cur.execute("""INSERT INTO portfolio.projects
-                    (project_name, purpose, github_link, docker_link  )
-                    VALUES (%s, %s, %s, %s)
+                    (project_name, purpose,image_filename, github_link, docker_link  )
+                    VALUES (%s, %s, %s, %s, %s)
                     RETURNING id""",
-                    (project_name, purpose, github_link, docker_link))
+                    (project_name, purpose,image_filename, github_link, docker_link))
         project_id = cur.fetchone()[0]
         
         for tech_id in tech_ids:
@@ -43,16 +43,17 @@ def add_project (project_name, purpose,  tech_ids, github_link=None, docker_link
         conn.commit()
         
 
-def update_project (project_id, project_name, purpose, tech_ids, github_link=None, docker_link=None):
+def update_project (project_id, project_name, purpose, tech_ids, image_filename, github_link=None, docker_link=None):
     with get_db_connection() as conn:
         cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
         cur.execute("""UPDATE portfolio.projects
                     SET project_name = %s,
                         purpose = %s,
+                        image_filename = %s,
                         github_link = %s,
                         docker_link = %s
                     WHERE id = %s""",
-                    (project_name, purpose, github_link, docker_link, project_id))
+                    (project_name, purpose, image_filename, github_link, docker_link, project_id))
         
         cur.execute("""DELETE FROM portfolio.project_technologies WHERE project_id = %s""", (project_id,))
 
