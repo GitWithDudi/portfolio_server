@@ -35,6 +35,7 @@ def get_all_prijects():
             "id": project["id"],
             "project_name": project["project_name"],
             "purpose": project["purpose"],
+            "image_filename": project["image_filename"],
             "github_link": project["github_link"],
             "docker_link": project["docker_link"]
         })
@@ -51,6 +52,7 @@ def attach_project():
     project_name = data.get("project_name")
     purpose = data.get("purpose")
     tech_ids = data.get("tech_ids", [])
+    image_filename = data.get("image_filename")
     github_link = data.get("github_link")
     docker_link = data.get("docker_link")
     
@@ -65,7 +67,7 @@ def attach_project():
         return jsonify({"error": "Invalid Docker link"}), 400
     
     try:
-        add_project(project_name, purpose, tech_ids, github_link, docker_link)
+        add_project(project_name, purpose, tech_ids, image_filename, github_link, docker_link)
         return jsonify({"message": "Project added successfully"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -80,6 +82,7 @@ def edit_project(project_id):
     project_name = data.get("project_name")
     purpose = data.get("purpose")
     tech_ids = data.get("tech_ids", [])
+    image_filename = data.get("image_filename")
     github_link = data.get("github_link")
     docker_link = data.get("docker_link")
     
@@ -94,7 +97,7 @@ def edit_project(project_id):
         return jsonify({"error": "Invalid Docker link"}), 400
     
     try:
-        update_project(project_id, project_name, purpose, tech_ids, github_link, docker_link)
+        update_project(project_id, project_name, purpose, tech_ids, image_filename, github_link, docker_link)
         return jsonify({"message": "Project updated successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
