@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 
-from src.Controller.Controller_projects import fach_projects_by_tech,get_all_prijects,attach_project, edit_project, remove_project
+from src.Controller.Controller_projects import get_project_by_id_controller, fach_projects_by_tech,get_all_prijects,attach_project, edit_project, remove_project
 
 
 
@@ -17,6 +17,11 @@ def fach_projects_by_tech_route(technology):
 @projects_bp.route("/projects", methods=["GET"])
 def get_all_projects_route():
     return get_all_prijects()
+
+#==================================================================================================
+@projects_bp.route("/project/<int:project_id>", methods=["GET"])
+def get_project_by_id_route(project_id):
+    return get_project_by_id_controller(project_id)
 
 #==================================================================================================
 
