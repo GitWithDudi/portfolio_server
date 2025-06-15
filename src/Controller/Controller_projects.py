@@ -1,4 +1,4 @@
-from src.Model.Model_projects import  get_project_by_technology, get_projects, add_project, update_project, delete_project
+from src.Model.Model_projects import  get_project_by_technology,get_project_by_id, get_projects, add_project, update_project, delete_project
 from flask import jsonify, request
 import validators
 
@@ -37,8 +37,32 @@ def get_all_prijects():
             "purpose": project["purpose"],
             "image_filename": project["image_filename"],
             "github_link": project["github_link"],
+            "technologies": project["technologies"],
             "docker_link": project["docker_link"]
         })
+    
+    return jsonify(result), 200
+
+
+#==================================================================================================
+def get_project_by_id_controller(project_id):
+    if not project_id:
+        return jsonify({"error": "project_id is required"}), 400
+    
+    project = get_project_by_id(project_id)
+    
+    if not project:
+        return jsonify({"error": "Project not found"}), 404
+    
+    result = {
+        "id": project["id"],
+        "project_name": project["project_name"],
+        "purpose": project["purpose"],
+        "image_filename": project["image_filename"],
+        "github_link": project["github_link"],
+        "technologies": project["technologies"],
+        "docker_link": project["docker_link"]
+    }
     
     return jsonify(result), 200
 
