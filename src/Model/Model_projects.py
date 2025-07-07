@@ -12,9 +12,11 @@ def get_projects():
     p.id,
     p.project_name,
     p.purpose,
+    p.description,
     p.github_link,
     p.docker_link,
     p.image_filename,
+    p.link,
     ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS technologies
 FROM portfolio.projects p
 LEFT JOIN portfolio.project_technologies pt ON p.id = pt.project_id
@@ -22,9 +24,11 @@ LEFT JOIN portfolio.technologies t ON pt.technology_id = t.id
 GROUP BY 
     p.id, 
     p.project_name, 
-    p.purpose, 
+    p.purpose,
+    p.description, 
     p.github_link, 
-    p.docker_link, 
+    p.docker_link,
+    p.link, 
     p.image_filename;
 
         """)
@@ -40,15 +44,17 @@ def get_project_by_id(project_id):
                 p.id,
                 p.project_name,
                 p.purpose,
+                p.description,
                 p.github_link,
                 p.docker_link,
                 p.image_filename,
+                p.link,
                 ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS technologies
             FROM portfolio.projects p
             LEFT JOIN portfolio.project_technologies pt ON p.id = pt.project_id
             LEFT JOIN portfolio.technologies t ON pt.technology_id = t.id
             WHERE p.id = %s
-            GROUP BY p.id, p.project_name, p.purpose, p.github_link, p.docker_link, p.image_filename
+            GROUP BY p.id, p.project_name, p.purpose, p.description, p.github_link, p.docker_link, p.image_filename, p.link
         """, (project_id,))
         project = cur.fetchone()
         if project:
@@ -66,9 +72,11 @@ def get_project_by_technology(technology):
                 p.id,
                 p.project_name,
                 p.purpose,
+                p.description,
                 p.github_link,
                 p.docker_link,
                 p.image_filename,
+                p.link,
                 ARRAY_AGG(t2.name) FILTER (WHERE t2.name IS NOT NULL) AS technologies
             FROM portfolio.projects p
             JOIN portfolio.project_technologies pt1 ON p.id = pt1.project_id
@@ -76,33 +84,56 @@ def get_project_by_technology(technology):
             LEFT JOIN portfolio.project_technologies pt2 ON p.id = pt2.project_id
             LEFT JOIN portfolio.technologies t2 ON pt2.technology_id = t2.id
             WHERE t1.name = %s
-            GROUP BY p.id, p.project_name, p.purpose, p.github_link, p.docker_link, p.image_filename
+            GROUP BY p.id, p.project_name, p.purpose, p.description, p.github_link, p.docker_link, p.image_filename, p.link
         """, (technology,))
         projects = cur.fetchall()
         return rows_to_dict(projects)
 
     
 
-def add_project (project_name, purpose,  tech_ids, image_filename, github_link=None, docker_link=None):
-    with get_db_connection() as conn:
-        cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
-        cur.execute("""INSERT INTO portfolio.projects
-                    (project_name, purpose,image_filename, github_link, docker_link  )
-                    VALUES (%s, %s, %s, %s, %s)
-                    RETURNING id""",
-                    (project_name, purpose,image_filename, github_link, docker_link))
-        project_id = cur.fetchone()[0]
+# def add_project (project_name, purpose,  tech_ids, description, image_filename, github_link=None, docker_link=None, link=None):
+#     with get_db_connection() as conn:
+#         cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+#         cur.execute("""INSERT INTO portfolio.projects
+#                     (project_name, purpose,image_filename, description, github_link, docker_link, link)
+#                     VALUES (%s, %s, %s, %s, %s, %s, %s) )
+#                     RETURNING id""",
+#                     (project_name, purpose,image_filename,description, github_link, docker_link, link))
+#         project_id = cur.fetchone()[0]
         
+#         for tech_id in tech_ids:
+#                 cur.execute("""
+#                     INSERT INTO portfolio.project_technologies (project_id, technology_id)
+#                     VALUES (%s, %s)
+#                 """, (project_id, tech_id))
+
+#         conn.commit()
+def add_project(project_name, purpose, tech_ids, description, image_filename, github_link=None, docker_link=None, link=None):
+    with get_db_connection() as conn:
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        # סדר העמודות והערכים צריך להיות זהה
+        cur.execute("""
+            INSERT INTO portfolio.projects
+            (project_name, purpose, description, image_filename, github_link, docker_link, link)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+            RETURNING id
+        """, (project_name, purpose, description, image_filename, github_link, docker_link, link))
+
+        project_id = cur.fetchone()[0]
+
+        # הוספת הטכנולוגיות המשויכות
         for tech_id in tech_ids:
-                cur.execute("""
-                    INSERT INTO portfolio.project_technologies (project_id, technology_id)
-                    VALUES (%s, %s)
-                """, (project_id, tech_id))
+            cur.execute("""
+                INSERT INTO portfolio.project_technologies (project_id, technology_id)
+                VALUES (%s, %s)
+            """, (project_id, tech_id))
 
         conn.commit()
+
         
 
-def update_project (project_id, project_name, purpose, tech_ids, image_filename, github_link=None, docker_link=None):
+def update_project (project_id, project_name, purpose, tech_ids, image_filename, github_link=None, docker_link=None, link=None):
     with get_db_connection() as conn:
         cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
         cur.execute("""UPDATE portfolio.projects
@@ -110,9 +141,10 @@ def update_project (project_id, project_name, purpose, tech_ids, image_filename,
                         purpose = %s,
                         image_filename = %s,
                         github_link = %s,
-                        docker_link = %s
+                        docker_link = %s,
+                        link = %s
                     WHERE id = %s""",
-                    (project_name, purpose, image_filename, github_link, docker_link, project_id))
+                    (project_name, purpose, image_filename, github_link, docker_link, project_id, link))
         
         cur.execute("""DELETE FROM portfolio.project_technologies WHERE project_id = %s""", (project_id,))
 

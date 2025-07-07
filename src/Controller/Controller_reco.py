@@ -23,7 +23,7 @@ def fetch_all_recommendations():
 #==================================================================================================
 
 
-UPLOAD_FOLDER = os.path.join('src', 'assets', 'documents')
+UPLOAD_FOLDER = os.path.join('static', 'documents')
 ALLOWED_EXTENSIONS = {'pdf'}
 
 def allowed_file(filename):
@@ -48,10 +48,16 @@ def attach_recommendation():
 
     if not allowed_file(file.filename):
         return jsonify({'error': 'Only PDF files are allowed'}), 400
+    
+    
 
     try:
         filename = secure_filename(file.filename)
         file_path = os.path.join(UPLOAD_FOLDER, filename)
+        
+        if os.path.exists(file_path):
+            return jsonify({'error': 'File with the same name already exists. Please rename your file.'}), 400
+        
         file.save(file_path)
 
         add_recommendation(

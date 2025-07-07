@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from src.Controller.Controller_reco import fetch_all_recommendations, attach_recommendation, remove_reco
 
 
@@ -11,6 +12,7 @@ def get_all_recommendations_route():
 #==================================================================================================
 
 @reco_bp.route("/recommendations", methods=["POST"])
+@jwt_required()
 def add_recommendation_route():
     return attach_recommendation()
 

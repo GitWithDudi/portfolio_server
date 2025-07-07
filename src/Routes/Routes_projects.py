@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-
+from flask_jwt_extended import jwt_required
 from src.Controller.Controller_projects import get_project_by_id_controller, fach_projects_by_tech,get_all_prijects,attach_project, edit_project, remove_project
 
 
@@ -26,6 +26,7 @@ def get_project_by_id_route(project_id):
 #==================================================================================================
 
 @projects_bp.route("/projects", methods=["POST"])
+@jwt_required()
 def add_project_route():
     return attach_project()
 

@@ -22,7 +22,7 @@ def get_all_recommendations():
 #==================================================================================================    
     
 
-def add_recommendation(name, role, company,recommendation_file_path, recommendation_date=None):
+def add_recommendation(name, role, company,recommendation_file_path=None, recommendation_date=None):
     with get_db_connection() as conn:
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("""INSERT INTO portfolio.recommenders
