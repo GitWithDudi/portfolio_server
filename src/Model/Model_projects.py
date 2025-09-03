@@ -122,7 +122,6 @@ def add_project(project_name, purpose, tech_ids, description, image_filename, gi
 
         project_id = cur.fetchone()[0]
 
-        # הוספת הטכנולוגיות המשויכות
         for tech_id in tech_ids:
             cur.execute("""
                 INSERT INTO portfolio.project_technologies (project_id, technology_id)
