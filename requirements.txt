@@ -12,3 +12,4 @@ gunicorn==21.2.0
 flask-jwt-extended==4.7.1
 psycopg2-binary>=2.9.6
 validators==0.20.0
+Flask-Cors==3.0.10
