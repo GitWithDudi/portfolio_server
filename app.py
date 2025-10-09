@@ -17,7 +17,11 @@ app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 
 jwt = JWTManager(app)
 
-CORS(app)
+CORS(app, resources={r"/*": {"origins": [
+    "http://localhost:5173",
+    "https://davidev.app",
+    "https://www.davidev.app"
+]}})
 
 app.register_blueprint(projects_bp)
 app.register_blueprint(technologies_bp)
