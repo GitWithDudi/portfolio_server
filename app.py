@@ -2,6 +2,7 @@ from src.Routes.Routes_projects import projects_bp
 from src.Routes.Routes_tech import technologies_bp
 from src.Routes.Routes_reco import reco_bp
 from src.Routes.Route_login import login_bp
+from src.Routes.upload_routes import upload_bp
 from flask_jwt_extended import JWTManager
 from flask import Flask
 from flask_cors import CORS
@@ -27,6 +28,7 @@ app.register_blueprint(projects_bp)
 app.register_blueprint(technologies_bp)
 app.register_blueprint(reco_bp)
 app.register_blueprint(login_bp)
+app.register_blueprint(upload_bp)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
