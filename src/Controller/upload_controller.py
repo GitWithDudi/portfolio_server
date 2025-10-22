@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from werkzeug.utils import secure_filename
-from src.Utils.r2_client import s3_client, R2_BUCKET_NAME, R2_ENDPOINT
+from src.Utils.r2_client import s3_client, R2_BUCKET_NAME
+from src.Utils.url_config import PUBLIC_BASE_URL  
 
 def upload_file():
     if 'file' not in request.files:
@@ -13,8 +14,13 @@ def upload_file():
     filename = secure_filename(file.filename)
 
     try:
+
         s3_client.upload_fileobj(file, R2_BUCKET_NAME, filename)
-        file_url = f"{R2_ENDPOINT}/{R2_BUCKET_NAME}/{filename}"
+
+    
+        file_url = f"{PUBLIC_BASE_URL}/{R2_BUCKET_NAME}/{filename}"
+
         return jsonify({"url": file_url})
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500

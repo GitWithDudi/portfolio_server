@@ -1,0 +1,2 @@
+
+PUBLIC_BASE_URL = "https://pub-bc385876927c48488959bba74219f39e.r2.dev"
