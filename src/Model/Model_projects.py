@@ -112,7 +112,6 @@ def add_project(project_name, purpose, tech_ids, description, image_filename, gi
     with get_db_connection() as conn:
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-        # סדר העמודות והערכים צריך להיות זהה
         cur.execute("""
             INSERT INTO portfolio.projects
             (project_name, purpose, description, image_filename, github_link, docker_link, link)
