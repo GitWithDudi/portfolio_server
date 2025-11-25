@@ -1,8 +1,9 @@
 import psycopg2
 from time import sleep
 import threading
+import os
 
-DB_URL = "postgresql://neondb_owner:npg_58CjfwRargqm@ep-little-glitter-a5u0h1tl-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
+DB_URL = os.environ.get("NEON_DB_URL")
 
 def keep_alive():
     while True:
