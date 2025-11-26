@@ -2,10 +2,12 @@ import psycopg2
 from time import sleep
 import threading
 import os
+from dotenv import load_dotenv
 
-DB_URL = os.environ.get("NEON_DB_URL")
+load_dotenv()
 
 def keep_alive():
+    DB_URL = os.environ.get("NEON_DB_URL")
     while True:
         try:
             conn = psycopg2.connect(DB_URL)
