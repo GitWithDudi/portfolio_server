@@ -1,3 +1,4 @@
+import src.Utils.keep_alive
 from src.Routes.Routes_projects import projects_bp
 from src.Routes.Routes_tech import technologies_bp
 from src.Routes.Routes_reco import reco_bp
@@ -8,7 +9,6 @@ from flask import Flask
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from src.Utils.keep_alive import keep_alive
 
 load_dotenv() 
 
