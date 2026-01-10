@@ -75,38 +75,6 @@ def get_project_by_id_controller(project_id):
 #==================================================================================================
 #project_name, purpose,  tech_ids, github_link=None, docker_link=None
 
-
-# def attach_project():
-#     data = request.get_json()
-    
-#     project_name = data.get("project_name")
-#     purpose = data.get("purpose")
-#     tech_ids = data.get("tech_ids", [])
-#     image_filename = data.get("image_filename")
-#     description = data.get("description")
-#     github_link = data.get("github_link")
-#     docker_link = data.get("docker_link")
-#     link = data.get("link")
-    
-    
-#     if not project_name or not purpose or not tech_ids:
-#         return jsonify({"error": "project_name, purpose and tech_ids are required"}), 400
-    
-#     if not github_link or not validators.url(github_link):
-#         return jsonify({"error": "Invalid GitHub link"}), 400
-    
-#     if docker_link and not validators.url(docker_link):
-#         return jsonify({"error": "Invalid Docker link"}), 400
-    
-#     try:
-#         add_project(project_name, purpose, tech_ids, image_filename,description, github_link, docker_link, link)
-#         return jsonify({"message": "Project added successfully"}), 201
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
-
-from flask import request, jsonify
-import validators
-
 def attach_project():
     data = request.get_json()
 
