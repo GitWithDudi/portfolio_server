@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from flask_jwt_extended import jwt_required
 from src.Controller.Controller_projects import get_project_by_id_controller, fach_projects_by_tech,get_all_prijects,attach_project, edit_project, remove_project
 
@@ -33,11 +33,13 @@ def add_project_route():
 #==================================================================================================
 
 @projects_bp.route("/project/<int:project_id>", methods=["PUT"])
+@jwt_required()
 def update_project_route(project_id):
     return edit_project(project_id)
 
 #==================================================================================================
 
 @projects_bp.route("/project/<int:project_id>", methods=["DELETE"])
+@jwt_required()
 def delete_project_route(project_id):
     return remove_project(project_id)
