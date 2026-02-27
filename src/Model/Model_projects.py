@@ -131,18 +131,19 @@ def add_project(project_name, purpose, tech_ids, description, image_filename, gi
 
         
 
-def update_project (project_id, project_name, purpose, tech_ids, image_filename, github_link=None, docker_link=None, link=None):
+def update_project(project_id, project_name, purpose, description, tech_ids, image_filename, github_link=None, docker_link=None, link=None):
     with get_db_connection() as conn:
-        cur = conn.cursor(cursor_factory = psycopg2.extras.DictCursor)
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         cur.execute("""UPDATE portfolio.projects
                     SET project_name = %s,
                         purpose = %s,
+                        description = %s,
                         image_filename = %s,
                         github_link = %s,
                         docker_link = %s,
                         link = %s
                     WHERE id = %s""",
-                    (project_name, purpose, image_filename, github_link, docker_link, project_id, link))
+                    (project_name, purpose, description, image_filename, github_link, docker_link, link, project_id))
         
         cur.execute("""DELETE FROM portfolio.project_technologies WHERE project_id = %s""", (project_id,))
 
