@@ -22,6 +22,8 @@ jwt = JWTManager(app)
 
 CORS(app, resources={r"/*": {"origins": [
     "http://localhost:5173",
+    "http://localhost:5174",
+    "http://localhost:5175",
     "https://davidev.app",
     "https://www.davidev.app"
 ]}})
